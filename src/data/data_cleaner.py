@@ -10,11 +10,11 @@ relative_path = 'raw/nyse_data.csv'
 file_path = os.path.join(dir_name, relative_path)
 
 
-all_data = {}
+all_data = []
 file_array = []
 
 for date in (pd.date_range(start= '1/1/1966', end = '12/31/2020', freq = 'D') ):
-    all_data[date] = []
+    all_data.append([date])
 
 
 with open(file_path, encoding="utf-8-sig") as bigdata:
@@ -26,8 +26,10 @@ with open(file_path, encoding="utf-8-sig") as bigdata:
         file_array.append(data_point)
 
 for line in file_array:
-    date = line[0]
-    all_data[date] = line[1]
+    for datum in all_data:
+        if (line[0] == datum[0]):
+            datum.append(line[1])
 
-print(all_data)
+for line in all_data:
+    print(line)
 
