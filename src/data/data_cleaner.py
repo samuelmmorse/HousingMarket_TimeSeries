@@ -1,7 +1,7 @@
 # This script takes incomplete data and fills in the gaps... highly unethical
 
 import os
-import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -30,6 +30,27 @@ for line in file_array:
         if (line[0] == datum[0]):
             datum.append(line[1])
 
+for i in range(len(all_data)-1, -1, -1):
+    if len(all_data[i]) == 1:
+        all_data[i].append(all_data[i+1][1])
+
+new_file = open('data_plotter.csv', 'w')
 for line in all_data:
-    print(line)
+    new_file.write(str(line[0].date()) + ',' + line[1] + '\n')
+new_file.close()
+
+
+'''
+#PLOT DATA
+all_data = np.array(all_data)
+
+x, y = all_data.T
+plt.rcParams["figure.figsize"] = [7.50, 3.50]
+plt.rcParams["figure.autolayout"] = True
+plt.plot(x, y)
+plt.title("Line graph")
+plt.plot(color="red")
+
+plt.show()
+'''
 
