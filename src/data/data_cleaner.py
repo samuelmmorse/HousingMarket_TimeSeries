@@ -34,7 +34,9 @@ for i in range(len(all_data)-1, -1, -1):
     if len(all_data[i]) == 1:
         all_data[i].append(all_data[i+1][1])
 
-new_file = open('data_plotter.csv', 'w')
+relative_path = 'data_plotter.csv'
+file_path = os.path.join(dir_name, relative_path)
+new_file = open(file_path, 'w')
 for line in all_data:
     new_file.write(str(line[0].date()) + ',' + line[1] + '\n')
 new_file.close()
