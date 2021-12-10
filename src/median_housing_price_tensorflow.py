@@ -96,7 +96,7 @@ print(reframed.shape)
 
 # split into train and test sets
 values = reframed.values
-n_train_days = 17000
+n_train_days = 15000
 train = values[:n_train_days, :]
 test = values[n_train_days:, :]
 # split into input and outputs
@@ -123,7 +123,7 @@ model.add(Dense(16, activation=activ.relu))
 model.add(Dense(1, activation=activ.relu))
 model.compile(loss='mae', optimizer='adam')
 # fit network
-history = model.fit(train_X, train_y, epochs=50, batch_size=128, validation_data=(test_X, test_y), verbose=1, shuffle=False)
+history = model.fit(train_X, train_y, epochs=50, batch_size=16, validation_data=(test_X, test_y), verbose=1, shuffle=False)
 # plot history
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='test')

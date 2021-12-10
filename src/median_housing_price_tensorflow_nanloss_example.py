@@ -117,7 +117,7 @@ reduce_lr = tf.keras.callbacks.LearningRateScheduler(lambda x: 1e-3 * 0.001 ** x
 # )
 
 model_e2d2.compile(
-    optimizer=tf.keras.optimizers.Adam(learning_rate=1e-15, clipnorm=1, clipvalue=1),
+    optimizer=tf.keras.optimizers.Adam(learning_rate=1e-60, clipnorm=1, clipvalue=1),
     loss=tf.keras.losses.Huber(),
 )
 history_e2d2 = model_e2d2.fit(
