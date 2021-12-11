@@ -6,6 +6,7 @@ from sklearn.preprocessing import MinMaxScaler #type: ignore
 import matplotlib.pyplot as plt #type: ignore
 import tensorflow as tf #type: ignore
 from keras import activations as activ # type: ignore
+from keras.layers import Dense #type: ignore
 import os
 
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -63,8 +64,8 @@ def split_series(series, n_past, n_future):
     return np.array(X), np.array(y)
 
 
-n_past = 1095
-n_future = 365
+n_past = 1200
+n_future = 364
 n_features = 11
 
 
@@ -92,7 +93,7 @@ decoder_inputs = tf.keras.layers.RepeatVector(n_future)(encoder_outputs2[0])
 decoder_l1 = tf.keras.layers.LSTM(100, return_sequences=True)(
     decoder_inputs, initial_state=encoder_states1
 )
-denseLayer1 = tf.keras.layers.Dense(64, activation=activ.relu)
+
 decoder_l2 = tf.keras.layers.LSTM(100, return_sequences=True)(
     decoder_l1, initial_state=encoder_states2
 )
@@ -109,15 +110,15 @@ plt.plot(train)
 plt.show()
 
 
-reduce_lr = tf.keras.callbacks.LearningRateScheduler(lambda x: 1e-3 * 0.001 ** x)
+reduce_lr = tf.keras.callbacks.LearningRateScheduler(lambda x: 1e-3 * 0.01 ** x)
 
-# callback = tf.keras.callbacks.EarlyStopping(
-#     monitor='val_loss', min_delta=0, patience=0, verbose=0,
-#     mode='auto', baseline=None, restore_best_weights=False
-# )
+callback = tf.keras.callbacks.EarlyStopping(
+    monitor='val_loss', min_delta=0, patience=3, verbose=1,
+    mode='auto', baseline=None, restore_best_weights=True
+)
 
 model_e2d2.compile(
-    optimizer=tf.keras.optimizers.Adam(learning_rate=1e-60, clipnorm=1, clipvalue=1),
+    optimizer=tf.keras.optimizers.Adam(learning_rate=1e-15, clipnorm=1, clipvalue=1),
     loss=tf.keras.losses.Huber(),
 )
 history_e2d2 = model_e2d2.fit(
@@ -125,9 +126,9 @@ history_e2d2 = model_e2d2.fit(
     y_train,
     epochs=5,
     validation_data=(X_test, y_test),
-    batch_size=128,
+    batch_size=32,
     verbose=1,
-    callbacks=[reduce_lr]
+    callbacks=[callback]
 )
 
 

@@ -112,18 +112,16 @@ test_X = test_X.reshape((test_X.shape[0], n_days, n_features))
 
 # design network
 model = Sequential()
-model.add(LSTM(200, input_shape=(train_X.shape[1], train_X.shape[2])))
+model.add(LSTM(100, input_shape=(train_X.shape[1], train_X.shape[2])))
 model.add(Dense(1, activation=activ.relu))
-model.add(Dense(16, activation=activ.relu))
 model.add(Dense(64, activation=activ.relu))
 model.add(Dense(128, activation=activ.relu))
 model.add(Dense(64, activation=activ.relu))
-model.add(Dense(32, activation=activ.relu))
-model.add(Dense(16, activation=activ.relu))
 model.add(Dense(1, activation=activ.relu))
-model.compile(loss='mae', optimizer='adam')
+
+model.compile(loss='huber', optimizer='adam')
 # fit network
-history = model.fit(train_X, train_y, epochs=50, batch_size=16, validation_data=(test_X, test_y), verbose=1, shuffle=False)
+history = model.fit(train_X, train_y, epochs=25, batch_size=128, validation_data=(test_X, test_y), verbose=1, shuffle=False)
 # plot history
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='test')
@@ -146,3 +144,8 @@ inv_y = inv_y[:,0]
 # calculate RMSE
 rmse = sqrt(mean_squared_error(inv_y, inv_yhat))
 print('Test RMSE: %.3f' % rmse)
+
+#save model
+
+
+model.save(os.path.join(dir_name, 'models/seq_nn'))
